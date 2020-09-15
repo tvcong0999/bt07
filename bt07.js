@@ -9,17 +9,26 @@ let url0 = "https://reqres.in/api/users?page=1&per_page=2";
 getData(url0).then((users) => {
   loadData(users);
 });
-
 $(document).ready(function () {
   $("ul.pagination").on("click", "li a", function () {
-    let url =
-      "https://reqres.in/api/users?page=" + $(this).text() + "&per_page=2";
+    let clickPage = $(this).text();
+    if (clickPage.indexOf("Next") != -1) {
+      curentPage = parseInt(curentPage) + 1;
+      if (curentPage > 6) curentPage = 6;
+    }
+    if (clickPage.indexOf("Previous") != -1) {
+      curentPage = parseInt(curentPage) - 1;
+      if (curentPage < 1) curentPage = 1;
+    }
+    if (!isNaN(clickPage)) curentPage = clickPage;
+    let url = "https://reqres.in/api/users?page=" + curentPage + "&per_page=2";
     getData(url).then((users) => {
       loadData(users);
     });
     $("li").removeClass("active");
     let parent = $(this).parent();
-    console.log(parent);
+    console.log($(this));
+
     $(parent).addClass("active");
   });
 });
